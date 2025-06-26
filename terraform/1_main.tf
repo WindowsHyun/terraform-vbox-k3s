@@ -20,17 +20,26 @@ resource "virtualbox_vm" "k3s_master" {
     device = var.network_device
   }
 
-  #network_adapter {
-  #  type = "nat"
-  #  device = var.network_device
-  #}
-
   status = "running"
+
   lifecycle {
     ignore_changes = [
       memory,
       cpus,
     ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'windowshyun' | sudo -S hostnamectl set-hostname k3s-master-node"
+    ]
+
+    connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      password = "windowshyun"
+      host     = self.network_adapter.0.ipv4_address
+    }
   }
 }
 
@@ -47,17 +56,26 @@ resource "virtualbox_vm" "k3s_workers" {
     device = var.network_device
   }
 
-  #network_adapter {
-  #  type = "nat"
-  #  device = var.network_device
-  #}
-
   status = "running"
+
   lifecycle {
     ignore_changes = [
       memory,
       cpus,
     ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'windowshyun' | sudo -S hostnamectl set-hostname k3s-worker-node-0${count.index + 1}"
+    ]
+
+    connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      password = "windowshyun"
+      host     = self.network_adapter.0.ipv4_address
+    }
   }
 }
 
