@@ -1,4 +1,4 @@
-# On-Premise Kubernetes(k3s) Cluster Automation with Terraform & Ansible
+# On-Premise Kubernetes Cluster Automation with Terraform & Ansible
 
 이 프로젝트는 개인 서버의 VirtualBox 환경에 수동으로 가상머신을 생성하고 설정하는 대신, Terraform과 Ansible을 사용하여 Kubernetes(k3s) 클러스터의 프로비저닝부터 구성까지 모든 과정을 코드로 자동화하는 것을 목표로 합니다.
 
@@ -31,7 +31,7 @@
 
 ```
 .
-├── terraform/     # Terraform 코드 (인프라 프로비저닝)
+├── terraform/                  # Terraform 코드 (인프라 프로비저닝)
 │   ├── 1_main.tf
 │   ├── 2_variables.tf
 │   ├── 3_outputs.tf
@@ -39,11 +39,11 @@
 │   └── ubuntu-2204.box
 │
 └── ansible/                    # Ansible 코드 (서버 구성 관리)
-    ├── inventory.ini         # (Terraform이 자동으로 생성)
+    ├── inventory.ini           # (Terraform이 자동으로 생성)
     └── install_k3s.yml
 ```
 
-## 🛠️ 시작하기 전에 (Prerequisites)
+## 🛠️ 시작하기 전에
 
 이 프로젝트를 실행하기 위해서는 Host PC에 아래의 도구들이 설치되어 있어야 합니다.
 
@@ -53,7 +53,7 @@
 - [ubuntu-2204.box](https://file.thisisserver.com/share/QwA92XAY) (유효 다운로드 기간 : 2025년 12월 23일 까지)
 - `sshpass` (Ansible의 비밀번호 기반 접속을 위해 필요)
 
-## ⚙️ 사용 방법 (Step-by-Step Guide)
+## ⚙️ 사용 방법
 
 #### 1단계: 베이스 VM 템플릿 준비
 
@@ -66,7 +66,7 @@ git clone https://github.com/WindowsHyun/terraform-vbox-k3s
 cd /home/ubuntu/terraform-vbox-k3s
 ```
 
-#### 3단계: 인프라 프로비저닝 (Terraform)
+#### 3단계: 인프라 프로비저닝
 
 ```bash
 # terraform-vbox-k3s 디렉토리에서 실행
@@ -76,7 +76,7 @@ terraform apply -auto-approve
 
 - 이 과정이 완료되면 `ansible/inventory.ini` 파일이 자동으로 생성/업데이트됩니다.
 
-#### 4단계: 클러스터 구성 (Ansible)
+#### 4단계: 클러스터 구성
 
 ```bash
 # ansible 디렉토리로 이동
