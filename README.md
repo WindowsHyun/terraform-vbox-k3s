@@ -31,7 +31,7 @@
 
 ```
 .
-├── terraform-vbox-k3s/     # Terraform 코드 (인프라 프로비저닝)
+├── terraform/     # Terraform 코드 (인프라 프로비저닝)
 │   ├── 1_main.tf
 │   ├── 2_variables.tf
 │   ├── 3_outputs.tf
