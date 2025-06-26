@@ -74,6 +74,7 @@ resource "local_file" "ansible_inventory" {
     [all:vars]
     ansible_user=ubuntu
     ansible_password=windowshyun
+    ansible_become_pass=windowshyun
     ansible_ssh_common_args='-o StrictHostKeyChecking=no'
   EOT
 
