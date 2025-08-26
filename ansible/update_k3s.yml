@@ -1,12 +1,14 @@
-# ansible/update_k3s.yml
-
----
 - name: K3s 마스터 노드 업데이트
   hosts: master
   become: yes
   tasks:
     - name: K3s 업데이트 스크립트 실행
       shell: "curl -sfL https://get.k3s.io | sh -"
+
+    - name: 마스터 노드의 클러스터 조인 토큰 값 가져오기
+      command: "cat /var/lib/rancher/k3s/server/node-token"
+      register: k3s_token
+      changed_when: false
 
 - name: K3s 워커 노드 업데이트
   hosts: workers
