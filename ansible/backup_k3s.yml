@@ -1,0 +1,45 @@
+- name: K3s 클러스터 백업 (SQLite 방식)
+  hosts: master
+  become: yes
+  tasks:
+    - name: K3s 상태 확인
+      command: systemctl is-active k3s
+      register: k3s_status
+      changed_when: false
+
+    - name: K3s 서비스 정지
+      systemd:
+        name: k3s
+        state: stopped
+      when: k3s_status.stdout == "active"
+
+    - name: K3s SQLite 데이터베이스 파일 복사
+      fetch:
+        src: /var/lib/rancher/k3s/server/db/state.db
+        dest: "/exthdd/BackupData/k3s/{{ now().strftime('%Y-%m-%d-%H%M%S') }}/"
+        flat: yes
+
+    - name: K3s 서비스 재시작
+      systemd:
+        name: k3s
+        state: started
+      when: k3s_status.stdout == "active"
+
+- name: 로컬 백업 폴더 정리
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: 30일이 지난 오래된 백업 폴더 찾기
+      find:
+        paths: /exthdd/BackupData/k3s
+        file_type: directory
+        age: "30d"
+        age_stamp: mtime
+      register: old_backup_dirs
+
+    - name: 오래된 백업 폴더 삭제 실행
+      file:
+        path: "{{ item.path }}"
+        state: absent
+      loop: "{{ old_backup_dirs.files }}"
+      when: old_backup_dirs.files | length > 0
