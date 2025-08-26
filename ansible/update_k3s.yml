@@ -1,0 +1,20 @@
+# ansible/update_k3s.yml
+
+---
+- name: K3s 마스터 노드 업데이트
+  hosts: master
+  become: yes
+  tasks:
+    - name: K3s 업데이트 스크립트 실행
+      shell: "curl -sfL https://get.k3s.io | sh -"
+
+- name: K3s 워커 노드 업데이트
+  hosts: workers
+  become: yes
+  tasks:
+    - name: K3s 업데이트 스크립트 실행
+      shell: >
+        curl -sfL https://get.k3s.io |
+        K3S_URL=https://{{ hostvars[groups['master'][0]]['ansible_host'] }}:6443
+        K3S_TOKEN={{ hostvars[groups['master'][0]]['k3s_token'].stdout }}
+        sh -
